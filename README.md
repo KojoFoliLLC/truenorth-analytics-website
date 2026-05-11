@@ -1,45 +1,51 @@
 # TRUENORTH ANALYTICS LTD Website
 
-A low-maintenance React + Vite starter website for TRUENORTH ANALYTICS LTD.
+Marketing website for **TRUENORTH ANALYTICS LTD** — a Canadian analytics consultancy helping organizations turn operational data into actionable business insight.
 
-## How to open in Visual Studio Code
+**Live site:** [true-north-analytics.com](https://true-north-analytics.com)
 
-1. Unzip the folder.
-2. Open Visual Studio Code.
-3. Select **File > Open Folder**.
-4. Choose the `truenorth-analytics-website` folder.
+## Tech stack
 
-## How to run locally
+- **React 18** + **Vite**
+- Plain CSS (dark theme, responsive at 820px)
+- Single-page app with anchor navigation
 
-Open the VS Code terminal and run:
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the local URL shown in the terminal, usually:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```text
-http://localhost:5173
-```
-
-## How to build for deployment
+## Build
 
 ```bash
 npm run build
 ```
 
-The production files will be created in the `dist` folder.
+Production files are output to `dist/`.
 
-## Recommended deployment
+## Deployment
 
-Use Cloudflare Pages connected to a GitHub repository.
+Deployed via **Cloudflare Workers** (static assets) connected to this GitHub repository.
 
-Recommended build settings:
+**Build configuration:**
 
-```text
-Framework preset: Vite
-Build command: npm run build
-Build output directory: dist
-```
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Non-production deploy command | `npx wrangler versions upload` |
+
+Deployment is triggered automatically on every push to `main`.
+
+## Content
+
+All page copy is defined as plain JS arrays at the top of `src/App.jsx`:
+- `services[]` — 4 service cards
+- `pillars[]` — 6 delivery model items
+- `industries[]` — 4 industry tiles
+
+Edit those arrays to update site content.
