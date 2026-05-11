@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 const services = [
   {
     title: 'Operational Analytics',
@@ -38,6 +40,23 @@ const industries = [
 ];
 
 function App() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main>
       <header className="hero">
@@ -53,7 +72,7 @@ function App() {
         </nav>
 
         <section className="hero-grid">
-          <div>
+          <div className="reveal">
             <p className="badge">Analytics for better business decisions</p>
             <h1>Helping organizations move from raw data to strategic clarity.</h1>
             <p className="hero-copy">
@@ -65,7 +84,7 @@ function App() {
             </div>
           </div>
 
-          <aside className="hero-card">
+          <aside className="hero-card reveal" style={{ transitionDelay: '0.15s' }}>
             <p className="muted">Core Focus</p>
             <h2>Operational intelligence that drives execution.</h2>
             <p>
@@ -76,7 +95,7 @@ function App() {
       </header>
 
       <section id="about" className="section two-column">
-        <div>
+        <div className="reveal">
           <p className="eyebrow accent">About TrueNorth</p>
           <h2>A disciplined, business-first approach to analytics.</h2>
           <p>
@@ -86,23 +105,35 @@ function App() {
             Our approach aligns analytics work with business priorities so that insight is not only technically sound, but operationally useful and decision-ready.
           </p>
         </div>
-        <div className="panel">
+        <div className="panel reveal" style={{ transitionDelay: '0.15s' }}>
           <h3>Our delivery model</h3>
           <div className="pillars">
-            {pillars.map((pillar) => <div className="pillar" key={pillar}>{pillar}</div>)}
+            {pillars.map((pillar, i) => (
+              <div
+                className="pillar reveal"
+                key={pillar}
+                style={{ transitionDelay: `${0.05 * i}s` }}
+              >
+                {pillar}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section id="services" className="section services-section">
-        <p className="eyebrow accent">Services</p>
-        <h2>Structured analytics services for growing organizations.</h2>
-        <p className="section-intro">
+        <p className="eyebrow accent reveal">Services</p>
+        <h2 className="reveal" style={{ transitionDelay: '0.05s' }}>Structured analytics services for growing organizations.</h2>
+        <p className="section-intro reveal" style={{ transitionDelay: '0.1s' }}>
           We help clients establish a sustainable analytics capability by starting with the fundamentals and building toward insight maturity.
         </p>
         <div className="cards">
-          {services.map((service) => (
-            <article className="card" key={service.title}>
+          {services.map((service, i) => (
+            <article
+              className="card reveal"
+              key={service.title}
+              style={{ transitionDelay: `${0.1 * i}s` }}
+            >
               <h3>{service.title}</h3>
               <p>{service.description}</p>
             </article>
@@ -111,7 +142,7 @@ function App() {
       </section>
 
       <section className="section two-column">
-        <div>
+        <div className="reveal">
           <p className="eyebrow accent">Who We Support</p>
           <h2>Supporting organizations that need clarity, structure, and performance visibility.</h2>
           <p>
@@ -119,12 +150,20 @@ function App() {
           </p>
         </div>
         <div className="industry-grid">
-          {industries.map((industry) => <div className="industry" key={industry}>{industry}</div>)}
+          {industries.map((industry, i) => (
+            <div
+              className="industry reveal"
+              key={industry}
+              style={{ transitionDelay: `${0.1 * i}s` }}
+            >
+              {industry}
+            </div>
+          ))}
         </div>
       </section>
 
       <section className="value-band">
-        <div>
+        <div className="reveal">
           <p className="eyebrow">Value Proposition</p>
           <h2>From disconnected data to decision-ready insight.</h2>
           <p>
@@ -134,14 +173,14 @@ function App() {
       </section>
 
       <section id="contact" className="section two-column contact-section">
-        <div>
+        <div className="reveal">
           <p className="eyebrow accent">Contact</p>
           <h2>Ready to build a stronger analytics foundation?</h2>
           <p>
-            Let’s discuss how TRUENORTH ANALYTICS LTD can help your organization improve visibility, align data with business priorities, and turn information into action.
+            Let's discuss how TRUENORTH ANALYTICS LTD can help your organization improve visibility, align data with business priorities, and turn information into action.
           </p>
         </div>
-        <div className="contact-card">
+        <div className="contact-card reveal" style={{ transitionDelay: '0.15s' }}>
           <h3>Start the conversation</h3>
           <p>Email: info@true-north-analytics.com</p>
           <p>Website: true-north-analytics.com</p>
