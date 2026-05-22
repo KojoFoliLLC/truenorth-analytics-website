@@ -9,6 +9,15 @@ Marketing website for **TRUENORTH ANALYTICS LTD** — a Canadian analytics consu
 - **React 18** + **Vite**
 - Plain CSS (dark theme, responsive at 820px)
 - Single-page app with anchor navigation
+- Inter loaded from Google Fonts
+
+## Features
+
+- Sticky frosted-glass nav bar with mobile hamburger menu
+- Scroll reveal animations (fade + slide-up via Intersection Observer)
+- Contact form powered by [FormSubmit](https://formsubmit.co) — submissions go to `info@true-north-analytics.com`
+- Open Graph + Twitter Card meta tags for social sharing
+- Respects `prefers-reduced-motion`
 
 ## Local development
 
@@ -48,4 +57,4 @@ All page copy is defined as plain JS arrays at the top of `src/App.jsx`:
 - `pillars[]` — 6 delivery model items
 - `industries[]` — 4 industry tiles
 
-Edit those arrays to update site content.
+Edit those arrays or the JSX directly in `src/App.jsx` to update site content.

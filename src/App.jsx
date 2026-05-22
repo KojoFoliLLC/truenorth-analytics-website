@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const services = [
   {
@@ -40,6 +40,10 @@ const industries = [
 ];
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+  const [status, setStatus] = useState('idle'); // idle | sending | success | error
+
   useEffect(() => {
     const els = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(
@@ -57,23 +61,73 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim() || !form.message.trim()) {
+      setStatus('validation');
+      return;
+    }
+    setStatus('sending');
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/info@true-north-analytics.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          'First Name': form.firstName,
+          'Last Name': form.lastName,
+          Email: form.email,
+          Phone: form.phone,
+          Message: form.message,
+          _next: 'https://true-north-analytics.com/#contact',
+          _subject: 'New consultation request — TrueNorth Analytics',
+        }),
+      });
+      if (res.ok) {
+        setStatus('success');
+        setForm({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <main>
       <header className="hero">
         <nav className="nav">
-          <a href="#" className="nav-logo">
+          <a href="#" className="nav-logo" onClick={closeMenu}>
             <img src="/logo.png" alt="TrueNorth Analytics" height="56" />
           </a>
-          <div className="nav-links">
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
+
+          <button
+            className={`hamburger${menuOpen ? ' open' : ''}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+
+          <div className={`nav-links${menuOpen ? ' open' : ''}`}>
+            <a href="#about" onClick={closeMenu}>About</a>
+            <a href="#services" onClick={closeMenu}>Services</a>
+            <a href="#contact" onClick={closeMenu}>Contact</a>
           </div>
         </nav>
 
         <section className="hero-grid">
           <div className="reveal">
-            <p className="badge">Analytics for better business decisions</p>
+            <p className="badge">Data-Driven Decisions. Measurable Results.</p>
             <h1>Helping organizations move from raw data to strategic clarity.</h1>
             <p className="hero-copy">
               TRUENORTH ANALYTICS LTD partners with growing organizations to build strong data foundations, uncover operational insight, and support smarter decision-making with practical analytics.
@@ -109,11 +163,7 @@ function App() {
           <h3>Our delivery model</h3>
           <div className="pillars">
             {pillars.map((pillar, i) => (
-              <div
-                className="pillar reveal"
-                key={pillar}
-                style={{ transitionDelay: `${0.05 * i}s` }}
-              >
+              <div className="pillar reveal" key={pillar} style={{ transitionDelay: `${0.05 * i}s` }}>
                 {pillar}
               </div>
             ))}
@@ -129,11 +179,7 @@ function App() {
         </p>
         <div className="cards">
           {services.map((service, i) => (
-            <article
-              className="card reveal"
-              key={service.title}
-              style={{ transitionDelay: `${0.1 * i}s` }}
-            >
+            <article className="card reveal" key={service.title} style={{ transitionDelay: `${0.1 * i}s` }}>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
             </article>
@@ -151,11 +197,7 @@ function App() {
         </div>
         <div className="industry-grid">
           {industries.map((industry, i) => (
-            <div
-              className="industry reveal"
-              key={industry}
-              style={{ transitionDelay: `${0.1 * i}s` }}
-            >
+            <div className="industry reveal" key={industry} style={{ transitionDelay: `${0.1 * i}s` }}>
               {industry}
             </div>
           ))}
@@ -179,13 +221,88 @@ function App() {
           <p>
             Let's discuss how TRUENORTH ANALYTICS LTD can help your organization improve visibility, align data with business priorities, and turn information into action.
           </p>
+          <p>
+            Your first consultation is complimentary — no cost, no commitment. We start by listening, then take an honest look at your situation to give you clear, straightforward guidance on the right path forward and a frank answer on whether TrueNorth is the right fit to help you get there.
+          </p>
         </div>
         <div className="contact-card reveal" style={{ transitionDelay: '0.15s' }}>
-          <h3>Start the conversation</h3>
-          <p>Email: info@true-north-analytics.com</p>
-          <p>Website: true-north-analytics.com</p>
-          <p>Focus: Data foundations, operational analytics, reporting, and performance insight</p>
-          <a className="btn primary full" href="mailto:info@true-north-analytics.com">Email Us</a>
+          {status === 'success' ? (
+            <div className="form-success">
+              <h3>Message sent!</h3>
+              <p>Thanks for reaching out. We'll be in touch shortly.</p>
+              <button className="btn primary full" onClick={() => setStatus('idle')}>Send another</button>
+            </div>
+          ) : (
+            <form className="contact-form" onSubmit={handleSubmit} noValidate>
+              <h3>Start the conversation</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="firstName">First Name <span className="required">*</span></label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="First name"
+                    value={form.firstName}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="lastName">Last Name <span className="required">*</span></label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Last name"
+                    value={form.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Email <span className="required">*</span></label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  value={form.email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="+1 (000) 000-0000"
+                  value={form.phone}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message">Message <span className="required">*</span></label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  placeholder="Tell us about your data challenges..."
+                  value={form.message}
+                  onChange={handleChange}
+                />
+              </div>
+              {status === 'validation' && (
+                <p className="form-error">Please fill in all three fields before sending.</p>
+              )}
+              {status === 'error' && (
+                <p className="form-error">Something went wrong. Please try again or email us directly.</p>
+              )}
+              <button className="btn primary full" type="submit" disabled={status === 'sending'}>
+                {status === 'sending' ? 'Sending…' : 'Send Message'}
+              </button>
+            </form>
+          )}
         </div>
       </section>
     </main>
