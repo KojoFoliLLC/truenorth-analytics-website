@@ -21,6 +21,11 @@ const services = [
     description:
       'Combine process rigor with analytical thinking to identify inefficiencies, root causes, and opportunities for measurable improvement.',
   },
+  {
+    title: 'Profit Erosion & Returns Analytics',
+    description:
+      'Identify where profit is being lost through returns, credits, rework, delays, or margin leakage, and get a prioritized, quantified set of corrective actions.',
+  },
 ];
 
 const pillars = [
@@ -33,10 +38,10 @@ const pillars = [
 ];
 
 const industries = [
-  'Operations & Supply Chain',
-  'Distribution & Warehousing',
-  'Retail & Commercial Services',
-  'Small and Mid-Sized Businesses',
+  'Wholesale & Distribution',
+  'E-Commerce & Omnichannel Retail',
+  'Professional Services',
+  'Education Supply & Business Services',
 ];
 
 function App() {
